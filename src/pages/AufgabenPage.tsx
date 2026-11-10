@@ -31,36 +31,43 @@ function TaskRow({
   onRemove: () => void
 }) {
   const due = task.dueDate ? dueLabel(task.dueDate) : null
+  const hasMeta = (task.kind === 'abgabe' && task.priority) || (due && !task.done)
   return (
-    <li className="flex items-center gap-3 rounded-lg border border-border bg-surface-strong px-3 py-2.5">
-      <input
-        type="checkbox"
-        checked={task.done}
-        onChange={onToggleDone}
-        className="h-4 w-4 shrink-0 accent-[var(--accent)]"
-      />
-      <span className={`min-w-0 flex-1 truncate text-sm ${task.done ? 'text-muted line-through' : 'text-ink'}`}>
-        {task.title}
-      </span>
-      {task.kind === 'abgabe' && task.priority && (
-        <span
-          className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
-          style={{ color: `var(${PRIORITY_COLOR_VAR[task.priority]})`, border: `1px solid var(${PRIORITY_COLOR_VAR[task.priority]})` }}
-        >
-          {PRIORITY_LABEL[task.priority]}
+    <li className="flex flex-col gap-1.5 rounded-lg border border-border bg-surface-strong px-3 py-2.5">
+      <div className="flex items-center gap-3">
+        <input
+          type="checkbox"
+          checked={task.done}
+          onChange={onToggleDone}
+          className="h-4 w-4 shrink-0 accent-[var(--accent)]"
+        />
+        <span className={`min-w-0 flex-1 truncate text-sm ${task.done ? 'text-muted line-through' : 'text-ink'}`}>
+          {task.title}
         </span>
+        <button type="button" aria-label="Markieren" onClick={onToggleStar} className="shrink-0">
+          <Star size={15} fill={task.starred ? 'var(--warn)' : 'none'} color={task.starred ? 'var(--warn)' : 'var(--muted)'} />
+        </button>
+        <button type="button" aria-label="Löschen" onClick={onRemove} className="shrink-0 text-muted hover:text-[var(--danger)]">
+          <Trash2 size={15} />
+        </button>
+      </div>
+      {hasMeta && (
+        <div className="flex flex-wrap items-center gap-2 pl-7">
+          {task.kind === 'abgabe' && task.priority && (
+            <span
+              className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
+              style={{ color: `var(${PRIORITY_COLOR_VAR[task.priority]})`, border: `1px solid var(${PRIORITY_COLOR_VAR[task.priority]})` }}
+            >
+              {PRIORITY_LABEL[task.priority]}
+            </span>
+          )}
+          {due && !task.done && (
+            <span className="shrink-0 text-xs" style={{ color: due.overdue ? 'var(--danger)' : 'var(--muted)' }}>
+              {due.text}
+            </span>
+          )}
+        </div>
       )}
-      {due && !task.done && (
-        <span className="shrink-0 text-xs" style={{ color: due.overdue ? 'var(--danger)' : 'var(--muted)' }}>
-          {due.text}
-        </span>
-      )}
-      <button type="button" aria-label="Markieren" onClick={onToggleStar} className="shrink-0">
-        <Star size={15} fill={task.starred ? 'var(--warn)' : 'none'} color={task.starred ? 'var(--warn)' : 'var(--muted)'} />
-      </button>
-      <button type="button" aria-label="Löschen" onClick={onRemove} className="shrink-0 text-muted hover:text-[var(--danger)]">
-        <Trash2 size={15} />
-      </button>
     </li>
   )
 }
