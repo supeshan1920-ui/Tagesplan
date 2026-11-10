@@ -22,24 +22,43 @@ and verified in a real browser, both themes, desktop + 390px mobile:
 - [x] Aufgaben (filters, star, Abgaben with priority + due countdown),
       Notizen (inline-editable), Statistik (real Saldo chart + task
       counts — no placeholder numbers for features that don't exist yet)
+- [x] Dashboard widgets: Gewohnheiten (habit tracker, Mon–Sun grid +
+      streaks), Fokus-Timer (configurable duration, reuses the progress
+      ring), Lern-Playlist (local audio files via file picker), plus
+      Aufgaben/Notizen summaries
+- [x] PWA: real service worker + manifest via vite-plugin-pwa (precaches
+      the app shell; Open-Meteo/future Supabase calls are deliberately
+      left uncached — see note below)
+- [x] Data export/import (Einstellungen → Daten) and one-click migration
+      from the old single-file app's `arbeitszeit_v2` localStorage key
+- [x] AA-contrast audit and fix: every accent-coloured button/icon
+      hardcoded white text, which fails AA on lighter accents (measured
+      2.43:1 on the Ozean preset, and even the *default* violet theme
+      failed at 2.65:1 on its lighter gradient stop). Fixed everywhere
+      with a contrast-computing `--accent-ink` token, with regression
+      tests pinning the exact values.
 - [x] Supabase schema (`supabase/schema.sql`) — ready to run, not yet wired
       to a live project (holding per your call — everything above runs
       fully local in the meantime)
-- [ ] Auth wired to a real Supabase project
-- [ ] Fokus-Timer, Gewohnheiten (habit tracker), Lern-Playlist — not in
-      the original page list, only mentioned as dashboard widgets; not
-      built yet since they need their own data model first
+- [x] 40 Vitest tests across zeitrechner/calendar/tasks/habits/color
+- [ ] Auth wired to a real Supabase project (holding per your call)
 - [ ] Microsoft Graph/MSAL calendar sync — explicitly optional in the
       spec, and your tenant may block it anyway; .ics + JSON paste
       (both built, both required) cover the same need without it
-- [ ] PWA service worker (manifest exists; offline caching doesn't yet)
 - [ ] Deploy (holding per your call)
 
 Every item above was checked in a real running browser (not just "it
 compiles") — build, type-check, and the relevant interaction, screenshot
-or read-back verified on each commit. Two real bugs were caught and
-fixed this way: a light-mode contrast bug in the theme system, and a
-task title that disappeared entirely on a 375px screen.
+or read-back verified on each commit. Real bugs caught and fixed this
+way: a light-mode contrast bug in the theme system, a task title that
+disappeared entirely on a 375px screen, and the AA-contrast issue above.
+
+**PWA note:** the service worker builds correctly (valid `sw.js` +
+workbox runtime, correct manifest, standard registration code) but its
+*registration* couldn't be confirmed inside this dev session's sandboxed
+browser preview (a generic "unknown error fetching the script" with no
+CSP/permissions-policy from the server itself to explain it) — re-check
+installability once this is actually deployed, in a real browser.
 
 ## Local development
 
