@@ -91,7 +91,7 @@ export function ScheduleEditor<T extends BaseItem>({
                     className="h-7 w-7 rounded-md text-xs font-medium transition-colors"
                     style={{
                       background: active ? 'var(--accent)' : 'transparent',
-                      color: active ? '#fff' : 'var(--muted)',
+                      color: active ? 'var(--accent-ink)' : 'var(--muted)',
                       border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`,
                     }}
                   >
@@ -148,7 +148,7 @@ export function ScheduleEditor<T extends BaseItem>({
                   className="h-7 w-7 rounded-md text-xs font-medium transition-colors"
                   style={{
                     background: active ? 'var(--accent)' : 'transparent',
-                    color: active ? '#fff' : 'var(--muted)',
+                    color: active ? 'var(--accent-ink)' : 'var(--muted)',
                     border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`,
                   }}
                 >

@@ -77,7 +77,7 @@ export function HabitTracker() {
                       background: done ? h.color : 'transparent',
                     }}
                   >
-                    {done && <Check size={12} color="#fff" strokeWidth={3} />}
+                    {done && <Check size={12} color="#0c0a08" strokeWidth={3} />}
                   </button>
                 )
               })}
