@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tagesplan</title>
+    <script type="text/javascript">
+      // GitHub Pages has no server-side rewrite for client-side routes, so a
+      // direct hit or refresh on e.g. /Tagesplan/kalender 404s here. Encode
+      // the path into a query string and bounce back to index.html, which
+      // decodes it and restores the real path via history.replaceState
+      // (see the inline script in index.html). Standard recipe:
+      // https://github.com/rafgraph/spa-github-pages
+      var pathSegmentsToKeep = 1 // keep "/Tagesplan"
+      var l = window.location
+      l.replace(
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
+          '/?/' +
+          l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash,
+      )
+    </script>
+  </head>
+  <body></body>
+</html>
