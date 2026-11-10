@@ -1,10 +1,27 @@
+import { useState } from 'react'
 import { GlassCard } from '../components/ui/GlassCard'
 import { ScheduleEditor } from '../components/settings/ScheduleEditor'
+import { ColorWheel } from '../components/settings/ColorWheel'
 import { useProfile } from '../lib/useProfile'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme, type ThemeColors } from '../context/ThemeContext'
 import { useAuth } from '../context/AuthContext'
 import { useZeitrechnerState } from '../lib/useZeitrechnerState'
 import { usePausenzeiten, useBlockzeiten } from '../lib/useSchedules'
+import { hexToRgb, rgbToHex } from '../lib/color'
+
+const TARGETS: { key: keyof ThemeColors; label: string }[] = [
+  { key: 'accent', label: 'Akzent' },
+  { key: 'accent2', label: 'Akzent 2' },
+  { key: 'bg', label: 'Hintergrund' },
+]
+
+const PRESETS: { name: string; colors: ThemeColors }[] = [
+  { name: 'Violett', colors: { accent: '#8b5cf6', accent2: '#c084fc', bg: '#0a0b16' } },
+  { name: 'Sonnenuntergang', colors: { accent: '#f97316', accent2: '#fb7185', bg: '#190b10' } },
+  { name: 'Ozean', colors: { accent: '#06b6d4', accent2: '#3b82f6', bg: '#061018' } },
+  { name: 'Wald', colors: { accent: '#22c55e', accent2: '#84cc16', bg: '#06140b' } },
+  { name: 'Rose', colors: { accent: '#ec4899', accent2: '#f472b6', bg: '#1a0a12' } },
+]
 
 const inputCls =
   'rounded-lg border border-border bg-surface-strong px-3 py-2 text-ink outline-none focus-visible:outline-2 focus-visible:outline-[var(--accent)]'
@@ -25,6 +42,9 @@ export function EinstellungenPage() {
   const { state, update } = useZeitrechnerState()
   const pausenzeiten = usePausenzeiten()
   const blockzeiten = useBlockzeiten()
+  const [target, setTarget] = useState<keyof ThemeColors>('accent')
+  const targetHex = colors[target]
+  const targetRgb = hexToRgb(targetHex) ?? { r: 0, g: 0, b: 0 }
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-5">
@@ -118,32 +138,70 @@ export function EinstellungenPage() {
       </GlassCard>
 
       <GlassCard title="Farben">
-        <p className="mb-3 text-xs text-muted">
-          Hex-Eingabe für jetzt — ein voller Farbkreis mit Live-Vorschau folgt in der nächsten Phase.
-        </p>
-        {(
-          [
-            ['accent', 'Akzent'],
-            ['accent2', 'Akzent 2'],
-            ['bg', 'Hintergrund'],
-          ] as const
-        ).map(([key, label]) => (
-          <Row key={key} label={label}>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={colors[key]}
-                onChange={(e) => setColor(key, e.target.value)}
-                className="h-9 w-9 cursor-pointer rounded-lg border border-border bg-transparent p-0.5"
+        <div className="mb-4 flex gap-2">
+          {TARGETS.map((t) => (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => setTarget(t.key)}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg border px-2 py-2 text-xs font-medium transition-colors"
+              style={{
+                borderColor: target === t.key ? 'var(--accent)' : 'var(--border)',
+                background: target === t.key ? 'var(--surface-strong)' : 'transparent',
+                color: target === t.key ? 'var(--ink)' : 'var(--muted)',
+              }}
+            >
+              <span className="h-3 w-3 rounded-full" style={{ background: colors[t.key] }} />
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        <ColorWheel hex={targetHex} onChange={(hex) => setColor(target, hex)} />
+
+        <div className="mt-4 flex items-center gap-2">
+          <input
+            className={`${inputCls} w-28 font-mono text-sm`}
+            value={targetHex}
+            onChange={(e) => setColor(target, e.target.value)}
+          />
+          {(['r', 'g', 'b'] as const).map((channel) => (
+            <input
+              key={channel}
+              type="number"
+              min={0}
+              max={255}
+              className={`${inputCls} w-16 text-center text-sm`}
+              value={targetRgb[channel]}
+              onChange={(e) =>
+                setColor(target, rgbToHex({ ...targetRgb, [channel]: Number(e.target.value) || 0 }))
+              }
+              aria-label={channel.toUpperCase()}
+            />
+          ))}
+        </div>
+
+        <div className="mt-4">
+          <div className="mb-2 text-xs font-medium text-muted">Presets</div>
+          <div className="flex gap-2">
+            {PRESETS.map((p) => (
+              <button
+                key={p.name}
+                type="button"
+                title={p.name}
+                aria-label={p.name}
+                onClick={() => {
+                  setColor('accent', p.colors.accent)
+                  setColor('accent2', p.colors.accent2)
+                  setColor('bg', p.colors.bg)
+                }}
+                className="h-9 w-9 shrink-0 rounded-full border border-border"
+                style={{ background: `linear-gradient(135deg, ${p.colors.accent}, ${p.colors.accent2})` }}
               />
-              <input
-                className={`${inputCls} w-24 font-mono text-sm`}
-                value={colors[key]}
-                onChange={(e) => setColor(key, e.target.value)}
-              />
-            </div>
-          </Row>
-        ))}
+            ))}
+          </div>
+        </div>
+
         <Row label="Glas-Transparenz">
           <input
             type="range"
