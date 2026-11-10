@@ -11,17 +11,35 @@ and verified in a real browser, both themes, desktop + 390px mobile:
 - [x] Project setup, routing, icon-only sidebar, dark/light theme tokens
 - [x] Zeitrechner — ported from `arbeitszeit_3.html`, verified with Vitest
       against the exact given test cases, same results in the live UI
-- [x] Basic colour controls + light/dark toggle in Einstellungen
+- [x] Pause-Countdown, progress ring, "Heute im Überblick" timeline on
+      Zeitrechner, with Pausenzeiten/Blockzeiten editors in Einstellungen
+- [x] Full canvas colour wheel (HSV, draggable knob, hex/RGB sync,
+      5 presets) in Einstellungen
+- [x] Kalender — month grid, day panel CRUD, .ics import, JSON-paste
+      import (for Teams screenshots), replace-on-reimport logic
+- [x] Dashboard widgets: Arbeitszeit, Heute (from Kalender), Wetter
+      (live Open-Meteo, searchable location)
+- [x] Aufgaben (filters, star, Abgaben with priority + due countdown),
+      Notizen (inline-editable), Statistik (real Saldo chart + task
+      counts — no placeholder numbers for features that don't exist yet)
 - [x] Supabase schema (`supabase/schema.sql`) — ready to run, not yet wired
-      to a live project
-- [ ] Full colour wheel (canvas-based) in Einstellungen
+      to a live project (holding per your call — everything above runs
+      fully local in the meantime)
 - [ ] Auth wired to a real Supabase project
-- [ ] Kalender (month grid, entries, .ics/JSON import)
-- [ ] Dashboard widgets (Heute, Wetter, Aufgaben, Fokus-Timer, Gewohnheiten, …)
-- [ ] Aufgaben, Notizen, Statistik
-- [ ] Pause-Countdown + progress ring on Zeitrechner
-- [ ] PWA (installable, offline cache)
-- [ ] Deploy
+- [ ] Fokus-Timer, Gewohnheiten (habit tracker), Lern-Playlist — not in
+      the original page list, only mentioned as dashboard widgets; not
+      built yet since they need their own data model first
+- [ ] Microsoft Graph/MSAL calendar sync — explicitly optional in the
+      spec, and your tenant may block it anyway; .ics + JSON paste
+      (both built, both required) cover the same need without it
+- [ ] PWA service worker (manifest exists; offline caching doesn't yet)
+- [ ] Deploy (holding per your call)
+
+Every item above was checked in a real running browser (not just "it
+compiles") — build, type-check, and the relevant interaction, screenshot
+or read-back verified on each commit. Two real bugs were caught and
+fixed this way: a light-mode contrast bug in the theme system, and a
+task title that disappeared entirely on a 375px screen.
 
 ## Local development
 
