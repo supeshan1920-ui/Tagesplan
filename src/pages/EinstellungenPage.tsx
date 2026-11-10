@@ -1,8 +1,10 @@
 import { GlassCard } from '../components/ui/GlassCard'
+import { ScheduleEditor } from '../components/settings/ScheduleEditor'
 import { useProfile } from '../lib/useProfile'
 import { useTheme } from '../context/ThemeContext'
 import { useAuth } from '../context/AuthContext'
 import { useZeitrechnerState } from '../lib/useZeitrechnerState'
+import { usePausenzeiten, useBlockzeiten } from '../lib/useSchedules'
 
 const inputCls =
   'rounded-lg border border-border bg-surface-strong px-3 py-2 text-ink outline-none focus-visible:outline-2 focus-visible:outline-[var(--accent)]'
@@ -21,6 +23,8 @@ export function EinstellungenPage() {
   const { mode, setMode, colors, setColor, glassOpacity, setGlassOpacity, reset } = useTheme()
   const { cloudEnabled, session } = useAuth()
   const { state, update } = useZeitrechnerState()
+  const pausenzeiten = usePausenzeiten()
+  const blockzeiten = useBlockzeiten()
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-5">
@@ -71,6 +75,26 @@ export function EinstellungenPage() {
         <Row label="Frühester Feierabend">
           <input type="time" className={`${inputCls} w-[110px] text-center`} value={state.floor} onChange={(e) => update('floor', e.target.value)} />
         </Row>
+      </GlassCard>
+
+      <GlassCard title="Pausenzeiten">
+        <ScheduleEditor
+          items={pausenzeiten.list}
+          withWeekdays
+          onAdd={pausenzeiten.add}
+          onUpdate={pausenzeiten.update}
+          onRemove={pausenzeiten.remove}
+        />
+      </GlassCard>
+
+      <GlassCard title="Blockzeiten">
+        <p className="mb-3 text-xs text-muted">Nur zur Übersicht — beeinflussen keine Berechnung.</p>
+        <ScheduleEditor
+          items={blockzeiten.list}
+          onAdd={blockzeiten.add}
+          onUpdate={blockzeiten.update}
+          onRemove={blockzeiten.remove}
+        />
       </GlassCard>
 
       <GlassCard title="Darstellung">

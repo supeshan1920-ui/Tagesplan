@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { GlassCard } from '../components/ui/GlassCard'
+import { ProgressRing } from '../components/ui/ProgressRing'
+import { TodayTimeline } from '../components/zeitrechner/TodayTimeline'
 import { useZeitrechnerState, toCalcInput } from '../lib/useZeitrechnerState'
 import { calcZeitrechner, formatSigned, formatTime, signClass } from '../lib/zeitrechner'
+import { usePausenzeiten, useBlockzeiten } from '../lib/useSchedules'
+import { computeCountdown, formatHMS } from '../lib/pausenzeiten'
+import { useClock } from '../lib/useClock'
 
 const inputCls =
   'w-[110px] rounded-lg border border-border bg-surface-strong px-3 py-2 text-center font-mono text-[15px] text-ink outline-none focus-visible:outline-2 focus-visible:outline-[var(--accent)]'
@@ -22,6 +27,27 @@ export function ZeitrechnerPage() {
   const { state, update, reset } = useZeitrechnerState()
   const result = calcZeitrechner(toCalcInput(state))
   const [savedNote, setSavedNote] = useState('')
+  const now = useClock()
+  const { list: pausenzeiten } = usePausenzeiten()
+  const { list: blockzeiten } = useBlockzeiten()
+
+  const countdown = computeCountdown(pausenzeiten, now, result.feierabendMin)
+  const countdownLabel =
+    countdown.kind === 'before-pause'
+      ? `Nächste Pause: ${countdown.pause.name} in ${formatHMS(countdown.secondsLeft)}`
+      : countdown.kind === 'in-pause'
+        ? `Pause läuft – noch ${formatHMS(countdown.secondsLeft)}`
+        : countdown.done
+          ? 'Feierabend ✓'
+          : `Feierabend in ${formatHMS(countdown.secondsLeft)}`
+
+  const startMin = (() => {
+    const [h, m] = state.start.split(':').map(Number)
+    return h * 60 + m
+  })()
+  const nowMin = now.getHours() * 60 + now.getMinutes()
+  const dayProgress =
+    result.feierabendMin > startMin ? (nowMin - startMin) / (result.feierabendMin - startMin) : 0
 
   const saveDay = () => {
     if (result.saldoHeuteMin == null) return
@@ -41,6 +67,22 @@ export function ZeitrechnerPage() {
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-5">
       <h1 className="text-2xl font-semibold text-ink">Zeitrechner</h1>
+
+      <GlassCard>
+        <div className="flex items-center gap-5">
+          <ProgressRing
+            progress={dayProgress}
+            label={`${Math.round(Math.min(1, Math.max(0, dayProgress)) * 100)}%`}
+            sublabel="Arbeitstag"
+          />
+          <div className="min-w-0 flex-1">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted">
+              {countdown.kind === 'in-pause' ? 'Pause' : countdown.kind === 'before-pause' ? 'Nächste Pause' : 'Feierabend'}
+            </div>
+            <p className="mt-1 break-words text-xl font-bold text-ink">{countdownLabel}</p>
+          </div>
+        </div>
+      </GlassCard>
 
       <GlassCard title="Heute">
         <Row label="Startzeit">
@@ -118,6 +160,10 @@ export function ZeitrechnerPage() {
           </button>
         </div>
         {savedNote && <p className="mt-2 text-xs text-muted">{savedNote}</p>}
+      </GlassCard>
+
+      <GlassCard title="Heute im Überblick">
+        <TodayTimeline pausenzeiten={pausenzeiten} blockzeiten={blockzeiten} now={now} />
       </GlassCard>
 
       <details className="glass p-5">
