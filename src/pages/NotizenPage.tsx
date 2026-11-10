@@ -52,7 +52,7 @@ export function NotizenPage() {
             type="button"
             aria-label="Hinzufügen"
             onClick={submit}
-            className="shrink-0 rounded-lg px-3 text-white"
+            className="shrink-0 rounded-lg px-3 text-accent-ink"
             style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
           >
             <Plus size={18} />

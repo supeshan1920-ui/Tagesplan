@@ -19,7 +19,7 @@ export function FocusTimerWidget() {
           type="button"
           aria-label={running ? 'Pausieren' : 'Starten'}
           onClick={running ? pause : start}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-white"
+          className="flex h-10 w-10 items-center justify-center rounded-full text-accent-ink"
           style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
         >
           {running ? <Pause size={16} /> : <Play size={16} />}

@@ -88,7 +88,7 @@ export function ImportDialog({
               type="file"
               accept=".ics,text/calendar"
               onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
-              className="w-full text-sm text-muted file:mr-3 file:rounded-md file:border-0 file:bg-[var(--accent)] file:px-3 file:py-2 file:text-sm file:font-medium file:text-white"
+              className="w-full text-sm text-muted file:mr-3 file:rounded-md file:border-0 file:bg-[var(--accent)] file:px-3 file:py-2 file:text-sm file:font-medium file:text-accent-ink"
             />
           </div>
         ) : (
@@ -107,7 +107,7 @@ export function ImportDialog({
             <button
               type="button"
               onClick={handleJson}
-              className="mt-2 w-full rounded-lg py-2 text-sm font-semibold text-white"
+              className="mt-2 w-full rounded-lg py-2 text-sm font-semibold text-accent-ink"
               style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
             >
               Importieren

@@ -273,7 +273,7 @@ export function EinstellungenPage() {
               downloadExport()
               setDataMsg('Export heruntergeladen.')
             }}
-            className="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-white"
+            className="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-accent-ink"
             style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
           >
             Exportieren

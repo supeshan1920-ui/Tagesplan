@@ -42,3 +42,29 @@ export function hexToRgb(hex: string): RGB | null {
   const n = parseInt(m[1], 16)
   return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }
 }
+
+function relativeLuminance({ r, g, b }: RGB): number {
+  const [rl, gl, bl] = [r, g, b].map((v) => {
+    const c = v / 255
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
+  })
+  return 0.2126 * rl + 0.7152 * gl + 0.0722 * bl
+}
+
+function contrastRatio(a: RGB, b: RGB): number {
+  const [l1, l2] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x)
+  return (l1 + 0.05) / (l2 + 0.05)
+}
+
+/** Picks whichever of near-white/near-black gives the better *worst-case*
+ * AA contrast across one or more background colours (pass both gradient
+ * stops for a two-colour button background) — so "white text on accent"
+ * buttons stay legible no matter which accent the colour wheel lands on. */
+export function pickReadableInk(...bgHexes: string[]): string {
+  const bgs = bgHexes.map(hexToRgb).filter((c): c is RGB => c != null)
+  if (bgs.length === 0) return '#ffffff'
+  const white: RGB = { r: 255, g: 255, b: 255 }
+  const black: RGB = { r: 12, g: 10, b: 8 }
+  const worstCase = (ink: RGB) => Math.min(...bgs.map((bg) => contrastRatio(ink, bg)))
+  return worstCase(white) >= worstCase(black) ? '#ffffff' : '#0c0a08'
+}

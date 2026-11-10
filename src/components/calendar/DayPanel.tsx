@@ -102,7 +102,7 @@ export function DayPanel({
         <button
           type="button"
           onClick={add}
-          className="mt-2 w-full rounded-md py-2 text-sm font-semibold text-white"
+          className="mt-2 w-full rounded-md py-2 text-sm font-semibold text-accent-ink"
           style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
         >
           Eintragen

@@ -10,6 +10,7 @@
 
   --accent: #8b5cf6;
   --accent-2: #c084fc;
+  --accent-ink: #ffffff;
   --bg: #0a0b16;
 
   --surface: rgba(255, 255, 255, 0.045);
@@ -47,6 +48,7 @@
 @theme {
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
+  --color-accent-ink: var(--accent-ink);
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-strong: var(--surface-strong);

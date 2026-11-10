@@ -54,7 +54,7 @@ export function Sidebar() {
                 [
                   'flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-150',
                   isActive
-                    ? 'text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]'
+                    ? 'text-accent-ink shadow-[0_0_0_1px_rgba(255,255,255,0.08)]'
                     : 'text-muted hover:text-ink hover:bg-surface-strong',
                 ].join(' ')
               }

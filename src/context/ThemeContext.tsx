@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { pickReadableInk } from '../lib/color'
 
 export type ThemeMode = 'dark' | 'light'
 
@@ -53,6 +54,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     else root.removeAttribute('data-theme')
     root.style.setProperty('--accent', state.colors.accent)
     root.style.setProperty('--accent-2', state.colors.accent2)
+    // Text/icons placed on top of an accent-coloured fill (buttons, the
+    // active sidebar item, etc.) need to flip between light and dark
+    // depending on how light the chosen accent itself is — a bright accent
+    // (e.g. cyan) with hardcoded white text fails AA contrast outright.
+    // Worst-case across both gradient stops, since most accent-coloured UI
+    // here is a 135deg accent->accent2 gradient, not a flat fill.
+    root.style.setProperty('--accent-ink', pickReadableInk(state.colors.accent, state.colors.accent2))
     // The custom "Hintergrund" colour is a dark-mode glow colour (that's what
     // the colour wheel edits in the reference). Light mode has its own fixed,
     // readable background in CSS — an inline override here would always win

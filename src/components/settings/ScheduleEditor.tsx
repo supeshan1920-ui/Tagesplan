@@ -129,7 +129,7 @@ export function ScheduleEditor<T extends BaseItem>({
             type="button"
             aria-label="Hinzufügen"
             onClick={add}
-            className="shrink-0 rounded-md p-1.5 text-white"
+            className="shrink-0 rounded-md p-1.5 text-accent-ink"
             style={{ background: 'var(--accent)' }}
           >
             <Plus size={16} />

@@ -182,7 +182,7 @@ export function AufgabenPage() {
         <button
           type="button"
           onClick={submit}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold text-white"
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold text-accent-ink"
           style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
         >
           <Plus size={16} /> Hinzufügen

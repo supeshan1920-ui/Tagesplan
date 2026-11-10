@@ -153,7 +153,7 @@ export function ZeitrechnerPage() {
           <button
             type="button"
             onClick={saveDay}
-            className="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-white"
+            className="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-accent-ink"
             style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
           >
             Tag speichern

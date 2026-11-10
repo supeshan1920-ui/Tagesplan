@@ -58,7 +58,7 @@ export function LoginPage() {
             type="button"
             disabled={busy}
             onClick={() => handle('in')}
-            className="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+            className="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-accent-ink disabled:opacity-60"
             style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
           >
             Anmelden

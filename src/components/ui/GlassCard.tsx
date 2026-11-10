@@ -33,7 +33,7 @@ export function PagePlaceholder({
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
       <div
-        className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-white"
+        className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-accent-ink"
         style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
       >
         {icon}
