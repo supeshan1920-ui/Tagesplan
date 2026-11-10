@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* ---------- theme tokens ----------
+   Every colour in the app derives from these. Changed live from
+   Einstellungen (colour wheel) and persisted per account. Dark is the
+   default/primary experience (matches the reference), light is a full
+   second palette, not an afterthought. */
+:root {
+  color-scheme: dark;
+
+  --accent: #8b5cf6;
+  --accent-2: #c084fc;
+  --bg: #0a0b16;
+
+  --surface: rgba(255, 255, 255, 0.045);
+  --surface-strong: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.09);
+  --ink: #f3f1fb;
+  --muted: #9b9bb8;
+  --faint: #6a6a86;
+
+  --good: #34d399;
+  --warn: #fbbf24;
+  --danger: #fb7185;
+
+  --school: #60a5fa;
+  --work: #e0a44d;
+  --off: #a78bfa;
+
+  --glass-blur: 18px;
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f2f1fa;
+  --surface: rgba(20, 16, 40, 0.045);
+  --surface-strong: rgba(20, 16, 40, 0.08);
+  --border: rgba(20, 16, 40, 0.1);
+  --ink: #18162a;
+  --muted: #666385;
+  --faint: #9492ad;
+}
+
+@theme {
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-border: var(--border);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-school: var(--school);
+  --color-work: var(--work);
+  --color-off: var(--off);
+
+  --font-display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* glass card utility — used everywhere a widget needs the reference's
+   frosted-panel look instead of a flat Tailwind bg/border combo */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
