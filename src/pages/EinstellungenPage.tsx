@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { GlassCard } from '../components/ui/GlassCard'
 import { ScheduleEditor } from '../components/settings/ScheduleEditor'
 import { ColorWheel } from '../components/settings/ColorWheel'
+import { LocationSearch } from '../components/settings/LocationSearch'
 import { useProfile } from '../lib/useProfile'
 import { useTheme, type ThemeColors } from '../context/ThemeContext'
 import { useAuth } from '../context/AuthContext'
 import { useZeitrechnerState } from '../lib/useZeitrechnerState'
 import { usePausenzeiten, useBlockzeiten } from '../lib/useSchedules'
+import { useWeatherLocation } from '../lib/useWeather'
 import { hexToRgb, rgbToHex } from '../lib/color'
 
 const TARGETS: { key: keyof ThemeColors; label: string }[] = [
@@ -42,6 +44,7 @@ export function EinstellungenPage() {
   const { state, update } = useZeitrechnerState()
   const pausenzeiten = usePausenzeiten()
   const blockzeiten = useBlockzeiten()
+  const { location, setLocation } = useWeatherLocation()
   const [target, setTarget] = useState<keyof ThemeColors>('accent')
   const targetHex = colors[target]
   const targetRgb = hexToRgb(targetHex) ?? { r: 0, g: 0, b: 0 }
@@ -53,6 +56,11 @@ export function EinstellungenPage() {
       <GlassCard title="Profil">
         <Row label="Name">
           <input className={inputCls} value={profile.name} onChange={(e) => setName(e.target.value)} />
+        </Row>
+        <Row label="Standort (Wetter)">
+          <div className="w-44">
+            <LocationSearch current={location} onSelect={setLocation} />
+          </div>
         </Row>
       </GlassCard>
 

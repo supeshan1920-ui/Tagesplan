@@ -1,6 +1,8 @@
 import { Clock3 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { GlassCard } from '../components/ui/GlassCard'
+import { WeatherWidget } from '../components/dashboard/WeatherWidget'
+import { HeuteWidget } from '../components/dashboard/HeuteWidget'
 import { useClock, greetingFor, formatGermanDate } from '../lib/useClock'
 import { useProfile } from '../lib/useProfile'
 import { useZeitrechnerState, toCalcInput } from '../lib/useZeitrechnerState'
@@ -51,6 +53,11 @@ export function DashboardPage() {
             Zum Zeitrechner →
           </Link>
         </GlassCard>
+      </section>
+
+      <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <HeuteWidget now={now} />
+        <WeatherWidget />
       </section>
     </div>
   )
