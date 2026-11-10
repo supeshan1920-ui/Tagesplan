@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom'
 import { GlassCard } from '../components/ui/GlassCard'
 import { WeatherWidget } from '../components/dashboard/WeatherWidget'
 import { HeuteWidget } from '../components/dashboard/HeuteWidget'
+import { TasksSummaryWidget } from '../components/dashboard/TasksSummaryWidget'
+import { NotesSummaryWidget } from '../components/dashboard/NotesSummaryWidget'
+import { HabitTracker } from '../components/dashboard/HabitTracker'
+import { FocusTimerWidget } from '../components/dashboard/FocusTimerWidget'
+import { PlaylistWidget } from '../components/dashboard/PlaylistWidget'
 import { useClock, greetingFor, formatGermanDate } from '../lib/useClock'
 import { useProfile } from '../lib/useProfile'
 import { useZeitrechnerState, toCalcInput } from '../lib/useZeitrechnerState'
@@ -58,6 +63,20 @@ export function DashboardPage() {
       <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <HeuteWidget now={now} />
         <WeatherWidget />
+      </section>
+
+      <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <TasksSummaryWidget />
+        <NotesSummaryWidget />
+      </section>
+
+      <section>
+        <HabitTracker />
+      </section>
+
+      <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <FocusTimerWidget />
+        <PlaylistWidget />
       </section>
     </div>
   )

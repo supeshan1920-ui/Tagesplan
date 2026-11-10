@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext'
 import { useZeitrechnerState } from '../lib/useZeitrechnerState'
 import { usePausenzeiten, useBlockzeiten } from '../lib/useSchedules'
 import { useWeatherLocation } from '../lib/useWeather'
+import { useFocusDuration } from '../lib/useFocusTimer'
 import { hexToRgb, rgbToHex } from '../lib/color'
 
 const TARGETS: { key: keyof ThemeColors; label: string }[] = [
@@ -45,6 +46,7 @@ export function EinstellungenPage() {
   const pausenzeiten = usePausenzeiten()
   const blockzeiten = useBlockzeiten()
   const { location, setLocation } = useWeatherLocation()
+  const { durationMin, setDurationMin } = useFocusDuration()
   const [target, setTarget] = useState<keyof ThemeColors>('accent')
   const targetHex = colors[target]
   const targetRgb = hexToRgb(targetHex) ?? { r: 0, g: 0, b: 0 }
@@ -102,6 +104,19 @@ export function EinstellungenPage() {
         </Row>
         <Row label="Frühester Feierabend">
           <input type="time" className={`${inputCls} w-[110px] text-center`} value={state.floor} onChange={(e) => update('floor', e.target.value)} />
+        </Row>
+        <Row label="Fokus-Timer Dauer">
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min={1}
+              max={180}
+              className={`${inputCls} w-16 text-center`}
+              value={durationMin}
+              onChange={(e) => setDurationMin(Number(e.target.value) || 25)}
+            />
+            <span className="text-xs text-muted">Min</span>
+          </div>
         </Row>
       </GlassCard>
 
