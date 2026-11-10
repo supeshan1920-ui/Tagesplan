@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { GlassCard } from '../components/ui/GlassCard'
 import { ScheduleEditor } from '../components/settings/ScheduleEditor'
 import { ColorWheel } from '../components/settings/ColorWheel'
@@ -11,6 +11,7 @@ import { usePausenzeiten, useBlockzeiten } from '../lib/useSchedules'
 import { useWeatherLocation } from '../lib/useWeather'
 import { useFocusDuration } from '../lib/useFocusTimer'
 import { hexToRgb, rgbToHex } from '../lib/color'
+import { downloadExport, importAllData, hasOldArbeitszeitData, importOldArbeitszeitData } from '../lib/dataPortability'
 
 const TARGETS: { key: keyof ThemeColors; label: string }[] = [
   { key: 'accent', label: 'Akzent' },
@@ -47,6 +48,8 @@ export function EinstellungenPage() {
   const blockzeiten = useBlockzeiten()
   const { location, setLocation } = useWeatherLocation()
   const { durationMin, setDurationMin } = useFocusDuration()
+  const [dataMsg, setDataMsg] = useState<string | null>(null)
+  const importFileRef = useRef<HTMLInputElement>(null)
   const [target, setTarget] = useState<keyof ThemeColors>('accent')
   const targetHex = colors[target]
   const targetRgb = hexToRgb(targetHex) ?? { r: 0, g: 0, b: 0 }
@@ -243,6 +246,63 @@ export function EinstellungenPage() {
         >
           Farben zurücksetzen
         </button>
+      </GlassCard>
+
+      <GlassCard title="Daten">
+        {hasOldArbeitszeitData() && (
+          <button
+            type="button"
+            onClick={() => {
+              const result = importOldArbeitszeitData()
+              setDataMsg(
+                result
+                  ? `Übernommen: Rechner-Einstellungen, ${result.blocks} Blockzeiten, ${result.events} Kalendereinträge. Seite neu laden, um sie zu sehen.`
+                  : 'Keine alten Daten gefunden.',
+              )
+            }}
+            className="mb-3 w-full rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-ink hover:border-[var(--accent)]"
+          >
+            Alte Arbeitszeit-Daten übernehmen
+          </button>
+        )}
+
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              downloadExport()
+              setDataMsg('Export heruntergeladen.')
+            }}
+            className="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-white"
+            style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
+          >
+            Exportieren
+          </button>
+          <button
+            type="button"
+            onClick={() => importFileRef.current?.click()}
+            className="flex-1 rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-ink hover:border-[var(--accent)]"
+          >
+            Importieren
+          </button>
+          <input
+            ref={importFileRef}
+            type="file"
+            accept="application/json"
+            className="hidden"
+            onChange={async (e) => {
+              const file = e.target.files?.[0]
+              if (!file) return
+              try {
+                const count = importAllData(await file.text())
+                setDataMsg(`${count} Einträge importiert. Seite neu laden, um sie zu sehen.`)
+              } catch {
+                setDataMsg('Datei konnte nicht gelesen werden — ist es ein gültiger Export?')
+              }
+            }}
+          />
+        </div>
+        {dataMsg && <p className="mt-3 text-sm text-muted">{dataMsg}</p>}
       </GlassCard>
     </div>
   )
