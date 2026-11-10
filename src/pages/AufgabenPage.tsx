@@ -66,7 +66,7 @@ function TaskRow({
 }
 
 export function AufgabenPage() {
-  const { tasks, add, update, remove } = useTasks()
+  const { tasks, add, update, toggleDone, remove } = useTasks()
   const [filter, setFilter] = useState<TaskFilter>('alle')
   const [title, setTitle] = useState('')
   const [dueDate, setDueDate] = useState('')
@@ -118,7 +118,7 @@ export function AufgabenPage() {
               <TaskRow
                 key={t.id}
                 task={t}
-                onToggleDone={() => update(t.id, { done: !t.done })}
+                onToggleDone={() => toggleDone(t.id)}
                 onToggleStar={() => update(t.id, { starred: !t.starred })}
                 onRemove={() => remove(t.id)}
               />

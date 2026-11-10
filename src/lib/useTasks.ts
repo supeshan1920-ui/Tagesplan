@@ -20,16 +20,21 @@ export function useTasks() {
     localStorage.setItem(KEY, JSON.stringify(tasks))
   }, [tasks])
 
-  const add = (t: Omit<Task, 'id' | 'createdAt' | 'done' | 'starred'>) =>
+  const add = (t: Omit<Task, 'id' | 'createdAt' | 'done' | 'starred' | 'completedAt'>) =>
     setTasks((list) => [
       ...list,
-      { ...t, id: crypto.randomUUID(), createdAt: Date.now(), done: false, starred: false },
+      { ...t, id: crypto.randomUUID(), createdAt: Date.now(), done: false, starred: false, completedAt: null },
     ])
 
   const update = (id: string, patch: Partial<Task>) =>
     setTasks((list) => list.map((t) => (t.id === id ? { ...t, ...patch } : t)))
 
+  const toggleDone = (id: string) =>
+    setTasks((list) =>
+      list.map((t) => (t.id === id ? { ...t, done: !t.done, completedAt: !t.done ? Date.now() : null } : t)),
+    )
+
   const remove = (id: string) => setTasks((list) => list.filter((t) => t.id !== id))
 
-  return { tasks, add, update, remove }
+  return { tasks, add, update, toggleDone, remove }
 }

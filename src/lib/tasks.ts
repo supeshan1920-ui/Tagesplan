@@ -9,6 +9,7 @@ export interface Task {
   kind: 'aufgabe' | 'abgabe'
   priority: Priority | null // only meaningful for 'abgabe'
   createdAt: number
+  completedAt: number | null
 }
 
 export type TaskFilter = 'alle' | 'heute' | 'bald' | 'erledigt'
