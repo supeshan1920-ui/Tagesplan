@@ -3,10 +3,12 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig } from 'vitest/config'
 
-// GitHub Pages serves this as a project site at /Tagesplan/, not at the
-// domain root — every asset URL and the router's basename need to account
-// for that subpath, or the deployed build 404s on its own JS/CSS.
-const BASE = '/Tagesplan/'
+// Relative base instead of a hardcoded GitHub Pages subpath: combined with
+// HashRouter (see App.tsx), this makes the exact same dist/ build work when
+// opened directly as a local file (double-click dist/index.html — no server
+// needed at all), hosted at a domain root, or hosted under any subpath —
+// without needing to know in advance which one it'll be.
+const BASE = './'
 
 // https://vite.dev/config/
 export default defineConfig({
