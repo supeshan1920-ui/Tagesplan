@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { viteSingleFile } from 'vite-plugin-singlefile'
 import { defineConfig } from 'vitest/config'
 
 // Relative base instead of a hardcoded GitHub Pages subpath: combined with
@@ -38,6 +39,12 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,woff2}'],
       },
     }),
+    // Inlines the JS bundle and CSS directly into index.html as a plain
+    // classic script instead of Vite's default <script type="module" src=…>.
+    // Browsers flat-out refuse to fetch ES module files over file://, which
+    // is why a double-clicked dist/index.html rendered blank before — this
+    // removes the external fetch entirely so the app runs with zero server.
+    viteSingleFile(),
   ],
   test: {
     environment: 'jsdom',
