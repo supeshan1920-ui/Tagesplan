@@ -67,10 +67,22 @@ export function computeCountdown(
   return { kind: 'to-feierabend', secondsLeft: Math.max(0, secondsLeft), done: secondsLeft <= 0 }
 }
 
-/** Plain countdown to a single time-of-day target, ignoring breaks entirely. */
-export function secondsUntil(targetMin: number, now: Date): { secondsLeft: number; done: boolean } {
+/**
+ * Plain countdown to a single time-of-day target, ignoring breaks entirely.
+ * `notBeforeMin`, when given, is the Startzeit: before it actually arrives the
+ * countdown holds at the full target-minus-start duration instead of also
+ * counting the time you haven't started working yet — it only starts ticking
+ * once the clock reaches Startzeit.
+ */
+export function secondsUntil(
+  targetMin: number,
+  now: Date,
+  notBeforeMin?: number,
+): { secondsLeft: number; done: boolean } {
   const nowSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()
-  const diff = targetMin * 60 - nowSeconds
+  const effectiveNowSeconds =
+    notBeforeMin != null ? Math.max(nowSeconds, notBeforeMin * 60) : nowSeconds
+  const diff = targetMin * 60 - effectiveNowSeconds
   return { secondsLeft: Math.max(0, diff), done: diff <= 0 }
 }
 

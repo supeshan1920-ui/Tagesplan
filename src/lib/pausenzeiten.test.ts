@@ -18,6 +18,17 @@ describe('secondsUntil', () => {
     expect(r.secondsLeft).toBe(0)
     expect(r.done).toBe(true)
   })
+
+  it('holds at the full duration before notBeforeMin (Startzeit) arrives', () => {
+    // 06:00, Start 07:30, target 16:12 -> stays at 16:12-07:30, not 16:12-06:00
+    const r = secondsUntil(16 * 60 + 12, at('06:00'), 7 * 60 + 30)
+    expect(r.secondsLeft).toBe((16 * 60 + 12 - (7 * 60 + 30)) * 60)
+  })
+
+  it('ticks normally again once now reaches/passes notBeforeMin', () => {
+    const r = secondsUntil(16 * 60 + 12, at('10:00'), 7 * 60 + 30)
+    expect(r.secondsLeft).toBe((16 * 60 + 12 - 10 * 60) * 60)
+  })
 })
 
 describe('computeCountdown falls back to feierabend once breaks are over', () => {

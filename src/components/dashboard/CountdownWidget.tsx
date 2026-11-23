@@ -16,10 +16,13 @@ function Tile({ label, value }: { label: string; value: string }) {
 export function CountdownWidget({ now }: { now: Date }) {
   const { state } = useZeitrechnerState()
   const { list: pausenzeiten } = usePausenzeiten()
-  const result = calcZeitrechner(toCalcInput(state))
+  const calcInput = toCalcInput(state)
+  const result = calcZeitrechner(calcInput)
 
-  const ohneSaldo = secondsUntil(result.ohneSaldoMin, now)
-  const mitSaldo = secondsUntil(result.feierabendMin, now)
+  // Holds at the full remaining duration until Startzeit actually arrives,
+  // instead of also counting down the time before your shift begins.
+  const ohneSaldo = secondsUntil(result.ohneSaldoMin, now, calcInput.startMin)
+  const mitSaldo = secondsUntil(result.feierabendMin, now, calcInput.startMin)
   // Falls through to "to-feierabend" (mit Saldo) once today's breaks are all done.
   const pauseCountdown = computeCountdown(pausenzeiten, now, result.feierabendMin)
 
