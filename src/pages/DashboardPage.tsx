@@ -1,8 +1,7 @@
-import { Clock3 } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { GlassCard } from '../components/ui/GlassCard'
 import { WeatherWidget } from '../components/dashboard/WeatherWidget'
 import { HeuteWidget } from '../components/dashboard/HeuteWidget'
+import { CountdownWidget } from '../components/dashboard/CountdownWidget'
 import { TasksSummaryWidget } from '../components/dashboard/TasksSummaryWidget'
 import { NotesSummaryWidget } from '../components/dashboard/NotesSummaryWidget'
 import { HabitTracker } from '../components/dashboard/HabitTracker'
@@ -10,18 +9,10 @@ import { FocusTimerWidget } from '../components/dashboard/FocusTimerWidget'
 import { PlaylistWidget } from '../components/dashboard/PlaylistWidget'
 import { useClock, greetingFor, formatGermanDate } from '../lib/useClock'
 import { useProfile } from '../lib/useProfile'
-import { useZeitrechnerState, toCalcInput } from '../lib/useZeitrechnerState'
-import { calcZeitrechner, formatTime } from '../lib/zeitrechner'
 
 export function DashboardPage() {
   const now = useClock()
   const { profile } = useProfile()
-  const { state } = useZeitrechnerState()
-  const result = calcZeitrechner(toCalcInput(state))
-
-  const nowMin = now.getHours() * 60 + now.getMinutes()
-  const remainingMin = Math.max(0, result.feierabendMin - nowMin)
-  const done = remainingMin <= 0
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,24 +31,16 @@ export function DashboardPage() {
           </p>
         </div>
 
-        <GlassCard>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
-            <Clock3 size={14} /> Arbeitszeit
-          </div>
-          <p className="mt-3 text-3xl font-bold text-ink">
-            {done ? 'Feierabend ✓' : `${String(Math.floor(remainingMin / 60)).padStart(2, '0')}h ${String(remainingMin % 60).padStart(2, '0')}m`}
-          </p>
-          <p className="mt-1 text-sm text-muted">
-            {done ? `seit ${formatTime(result.feierabendMin)}` : `Feierabend um ${formatTime(result.feierabendMin)}`}
-          </p>
+        <div className="flex flex-col gap-3">
+          <CountdownWidget now={now} />
           <Link
             to="/zeitrechner"
-            className="mt-4 inline-block text-sm font-medium"
+            className="self-start text-sm font-medium"
             style={{ color: 'var(--accent-2)' }}
           >
             Zum Zeitrechner →
           </Link>
-        </GlassCard>
+        </div>
       </section>
 
       <section className="grid grid-cols-1 gap-5 md:grid-cols-2">

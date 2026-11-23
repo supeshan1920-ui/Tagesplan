@@ -67,6 +67,13 @@ export function computeCountdown(
   return { kind: 'to-feierabend', secondsLeft: Math.max(0, secondsLeft), done: secondsLeft <= 0 }
 }
 
+/** Plain countdown to a single time-of-day target, ignoring breaks entirely. */
+export function secondsUntil(targetMin: number, now: Date): { secondsLeft: number; done: boolean } {
+  const nowSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()
+  const diff = targetMin * 60 - nowSeconds
+  return { secondsLeft: Math.max(0, diff), done: diff <= 0 }
+}
+
 export function formatHMS(totalSeconds: number): string {
   const s = Math.max(0, Math.round(totalSeconds))
   const h = Math.floor(s / 3600)
